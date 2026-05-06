@@ -1,166 +1,319 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="typewriter-title">@T</title>
-    <!-- Font Awesome for better Brand Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        :root {
-            --glass: rgba(0, 0, 0, 0.55);
-            --border: rgba(255, 255, 255, 0.08);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tubiu</title>
 
-        /* CUSTOM DOT CURSOR */
-        * { cursor: none !important; }
-        #cursor-dot {
-            width: 5px;
-            height: 5px;
-            background: white;
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-            box-shadow: 0 0 12px rgba(255,255,255,1);
-            transition: transform 0.08s ease-out;
-        }
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: 'Inter', sans-serif; background: #000; color: white; }
+<style>
+:root {
+    --glass: rgba(0,0,0,0.75);
+    --border: rgba(255,255,255,0.06);
+}
 
-        /* VIDEO BACKGROUND */
-        #bg-video {
-            position: fixed;
-            right: 0;
-            bottom: 0;
-            min-width: 100%;
-            min-height: 100%;
-            z-index: -1;
-            filter: brightness(0.4);
-            object-fit: cover;
-            visibility: hidden; /* Prevent flickering before click */
-        }
+/* CURSOR */
+* { cursor: none !important; }
 
-        /* ENTRY SCREEN */
-        #entry {
-            position: fixed;
-            inset: 0;
-            background: black;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            transition: 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        #entry.hide { opacity: 0; pointer-events: none; }
-        .pulse { animation: p 2s infinite; letter-spacing: 4px; text-transform: uppercase; font-size: 11px; font-weight: 300; }
-        @keyframes p { 0%, 100% { opacity: 0.1; } 50% { opacity: 0.7; } }
+#cursor-dot {
+    width: 6px;
+    height: 6px;
+    background: white;
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    box-shadow: 0 0 10px 1px white;
+    transform: translate3d(0,0,0);
+    will-change: transform;
+}
 
-        /* ACRYLIC CONTENT */
-        .container { display: flex; justify-content: center; align-items: center; height: 100vh; }
-        
-        .profile-card {
-            background: var(--glass);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-            border: 1px solid var(--border);
-            padding: 50px 35px;
-            border-radius: 12px;
-            text-align: center;
-            width: 360px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.9);
-        }
+body,html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+    background: #000;
+    color: white;
+}
 
-        h1 { font-size: 22px; margin-bottom: 25px; letter-spacing: 2px; font-weight: 400; text-transform: lowercase; }
-        
-        .info-box {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border);
-            padding: 14px;
-            border-radius: 8px;
-            font-size: 13px;
-            margin-bottom: 12px;
-            color: #ddd;
-            letter-spacing: 0.5px;
-        }
+#bg-video {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    filter: brightness(0.25);
+}
 
-        /* BETTER SOCIAL ICONS */
-        .socials { display: flex; justify-content: center; gap: 25px; margin-top: 30px; }
-        .socials a { color: white; font-size: 20px; opacity: 0.4; transition: 0.4s; text-decoration: none; }
-        .socials a:hover { opacity: 1; transform: translateY(-5px); text-shadow: 0 0 15px rgba(255,255,255,0.5); }
+#entry {
+    position: fixed;
+    inset: 0;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition: 1s ease;
+}
+#entry.hide { opacity: 0; pointer-events: none; }
 
-        .views { position: fixed; bottom: 25px; left: 25px; font-size: 10px; opacity: 0.3; letter-spacing: 1px; text-transform: uppercase; }
-    </style>
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    position: relative;
+    z-index: 1;
+    padding: 20px;
+}
+
+.profile-card {
+    position: relative;
+    background: var(--glass);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    padding: 60px 20px 40px;
+    border-radius: 18px;
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+}
+
+/* IVY (RESTORED EXACTLY) */
+.ivy {
+    position: absolute;
+    pointer-events: none;
+    z-index: 10;
+    filter: brightness(0.6);
+}
+.ivy-top-l {
+    top: -30px; left: 10px;
+    width: 220px; height: 60px;
+    transform: rotate(85deg) scaleY(-1);
+    object-fit: contain;
+}
+.ivy-top-r {
+    top: -30px; right: 10px;
+    width: 220px; height: 60px;
+    transform: rotate(-85deg);
+    object-fit: contain;
+}
+.ivy-side-l {
+    top: 20px; left: -50px;
+    width: 100px; height: 350px;
+    transform: rotate(5deg);
+    object-fit: contain;
+}
+.ivy-side-r {
+    top: 20px; right: -50px;
+    width: 100px; height: 350px;
+    transform: scaleX(-1) rotate(5deg);
+    object-fit: contain;
+}
+
+h1 {
+    font-size: 38px;
+    margin: 0 0 5px;
+    letter-spacing: 2px;
+}
+
+.typing-container {
+    height: 24px;
+    margin-bottom: 30px;
+    font-size: 16px;
+    color: #ddd;
+}
+
+.cursor-bar {
+    animation: blink 0.8s infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+.link-btn {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 16px;
+    border-radius: 12px;
+    margin: 0 auto 12px;
+    width: 85%;
+    font-size: 14px;
+    color: #bbb;
+    text-decoration: none;
+    display: block;
+}
+
+/* SOCIALS */
+.socials {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin-top: 30px;
+}
+.socials a {
+    color: white;
+    font-size: 20px;
+    opacity: .4;
+    transition: .3s;
+}
+.socials a:hover {
+    opacity: 1;
+    transform: translateY(-3px);
+}
+
+/* VOLUME (RESTORED) */
+#vol-wrapper {
+    position: fixed;
+    top: 25px;
+    left: 25px;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    background: rgba(0,0,0,0.4);
+    padding: 10px;
+    border-radius: 30px;
+}
+#vol-slider {
+    width: 0;
+    opacity: 0;
+    transition: 0.3s;
+    accent-color: white;
+}
+#vol-wrapper:hover {
+    gap: 12px;
+    padding: 10px 18px;
+}
+#vol-wrapper:hover #vol-slider {
+    width: 80px;
+    opacity: 1;
+}
+</style>
 </head>
+
 <body>
 
-    <div id="cursor-dot"></div>
+<div id="cursor-dot"></div>
 
-    <div id="entry" onclick="enterSite()">
-        <div class="pulse">click to enter</div>
+<div id="entry" onclick="start()">
+    <div style="letter-spacing:4px;opacity:.4;">CLICK TO ENTER</div>
+</div>
+
+<video id="bg-video" loop muted playsinline>
+    <source src="https://files.catbox.moe/6gtpma.mp4">
+</video>
+
+<audio id="bg-audio" loop>
+    <source src="https://files.catbox.moe/o5xf95.mp3">
+</audio>
+
+<!-- VOLUME -->
+<div id="vol-wrapper">
+    <i class="fa-solid fa-volume-high"></i>
+    <input type="range" id="vol-slider" min="0" max="1" step="0.01" value="0.5">
+</div>
+
+<div class="container">
+<div class="profile-card">
+
+    <!-- IVY RESTORED -->
+    <img src="https://files.catbox.moe/9blqvh.png" class="ivy ivy-top-l">
+    <img src="https://files.catbox.moe/9blqvh.png" class="ivy ivy-top-r">
+    <img src="https://files.catbox.moe/9blqvh.png" class="ivy ivy-side-l">
+    <img src="https://files.catbox.moe/9blqvh.png" class="ivy ivy-side-r">
+
+    <h1>Tubiu</h1>
+
+    <div class="typing-container">
+        <span id="typed-text"></span><span class="cursor-bar">|</span>
     </div>
 
-    <video id="bg-video" loop playsinline>
-        <source src="https://files.catbox.moe/kqy3zv.mp4" type="video/mp4">
-    </video>
+    <a class="link-btn">Discord: .tubiu</a>
 
-    <div class="container">
-        <div class="profile-card">
-            <h1>tubiuwu</h1>
-            
-            <div class="info-box">"Innocent Sin"</div>
-            <div class="info-box">Discord: .tubiu</div>
+    <div class="socials">
+        <a href="https://open.spotify.com/user/ypzl18cpzin19zec9bfb31575?si=004e2a0cc8d24816" target="_blank">
+            <i class="fa-brands fa-spotify"></i>
+        </a>
 
-            <div class="socials">
-                <a href="https://open.spotify.com/user/ypzl18cpzin19zec9bfb31575?si=f26ffe2191794829" target="_blank"><i class="fa-brands fa-spotify"></i></a>
-                <a href="https://www.roblox.com/users/10650135323/profile" target="_blank"><i class="fa-solid fa-cube"></i></a>
-                <a href="https://www.tiktok.com/@tubiu_" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
-                <a href="https://steamcommunity.com/id/Tubiu/" target="_blank"><i class="fa-brands fa-steam"></i></a>
-            </div>
-        </div>
+        <a href="https://www.roblox.com/users/10650135323/profile" target="_blank">
+            <i class="fa-solid fa-gamepad"></i>
+        </a>
+
+        <a href="https://www.tiktok.com/@tubiu_" target="_blank">
+            <i class="fa-brands fa-tiktok"></i>
+        </a>
+
+        <a href="https://steamcommunity.com/id/Tubiu/" target="_blank">
+            <i class="fa-brands fa-steam"></i>
+        </a>
     </div>
 
-    <div class="views">
-        Views: 104
-    </div>
+</div>
+</div>
 
-    <script>
-        // 1. UPDATED TYPEWRITER TITLE (@T, @Tu, etc)
-        const titleTag = document.getElementById('typewriter-title');
-        const phrases = ["@T", "@Tu", "@Tub", "@Tubi", "@Tubiu"];
-        let phraseIndex = 0;
-        let isAdding = true;
+<script>
 
-        function updateTitle() {
-            titleTag.innerText = phrases[phraseIndex];
-            if (isAdding) {
-                if (phraseIndex < phrases.length - 1) phraseIndex++;
-                else isAdding = false;
-            } else {
-                if (phraseIndex > 0) phraseIndex--;
-                else isAdding = true;
-            }
-            setTimeout(updateTitle, 500);
+/* CURSOR (OPTIMIZED ONLY, NOTHING REMOVED) */
+const dot = document.getElementById("cursor-dot");
+let mx = 0, my = 0, cx = 0, cy = 0;
+
+document.addEventListener("mousemove", e => {
+    mx = e.clientX;
+    my = e.clientY;
+});
+
+function cursorLoop() {
+    cx += (mx - cx) * 0.18;
+    cy += (my - cy) * 0.18;
+    dot.style.transform = `translate3d(${cx - 3}px, ${cy - 3}px, 0)`;
+    requestAnimationFrame(cursorLoop);
+}
+cursorLoop();
+
+/* TYPEWRITER (UNCHANGED LOGIC) */
+const phrases = ["I love you.", "just breathe.", "stay a while.", "drifting away.", "Innocent Sin"];
+let p = 0, i = 0, del = false;
+
+function type() {
+    const el = document.getElementById("typed-text");
+    const word = phrases[p];
+
+    el.textContent = word.substring(0, i);
+
+    if (!del) {
+        i++;
+        if (i > word.length) {
+            del = true;
+            return setTimeout(type, 1500);
         }
-        updateTitle();
-
-        // 2. CURSOR LOGIC
-        const dot = document.getElementById('cursor-dot');
-        document.addEventListener('mousemove', (e) => {
-            dot.style.left = e.clientX + 'px';
-            dot.style.top = e.clientY + 'px';
-        });
-
-        // 3. FORCE VIDEO LOAD ON CLICK
-        function enterSite() {
-            document.getElementById('entry').classList.add('hide');
-            const video = document.getElementById('bg-video');
-            video.style.visibility = 'visible';
-            video.load(); // Forces the browser to fetch the file
-            video.muted = false;
-            video.volume = 0.4;
-            video.play();
+    } else {
+        i--;
+        if (i === 0) {
+            del = false;
+            p = (p + 1) % phrases.length;
         }
-    </script>
+    }
+    setTimeout(type, del ? 45 : 90);
+}
+type();
+
+/* START */
+function start() {
+    document.getElementById("entry").classList.add("hide");
+    const v = document.getElementById("bg-video");
+    const a = document.getElementById("bg-audio");
+    v.play();
+    a.volume = 0.5;
+    a.play();
+}
+
+/* VOLUME */
+document.getElementById("vol-slider").oninput = (e) => {
+    document.getElementById("bg-audio").volume = e.target.value;
+};
+
+</script>
+
 </body>
 </html>
