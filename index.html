@@ -3,26 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="typewriter-title">@t</title>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <title id="typewriter-title">@T</title>
+    <!-- Font Awesome for better Brand Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
-            /* Acrylic / Frosted Glass effect */
-            --glass: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.1);
+            --glass: rgba(0, 0, 0, 0.55);
+            --border: rgba(255, 255, 255, 0.08);
         }
 
-        /* CUSTOM CURSOR */
+        /* CUSTOM DOT CURSOR */
         * { cursor: none !important; }
         #cursor-dot {
-            width: 6px;
-            height: 6px;
+            width: 5px;
+            height: 5px;
             background: white;
             border-radius: 50%;
             position: fixed;
             pointer-events: none;
             z-index: 9999;
-            box-shadow: 0 0 10px rgba(255,255,255,0.8);
+            box-shadow: 0 0 12px rgba(255,255,255,1);
+            transition: transform 0.08s ease-out;
         }
 
         body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: 'Inter', sans-serif; background: #000; color: white; }
@@ -34,10 +35,10 @@
             bottom: 0;
             min-width: 100%;
             min-height: 100%;
-            z-index: -2;
-            filter: brightness(0.5);
+            z-index: -1;
+            filter: brightness(0.4);
             object-fit: cover;
-            display: none; /* Hidden until enter */
+            visibility: hidden; /* Prevent flickering before click */
         }
 
         /* ENTRY SCREEN */
@@ -49,47 +50,46 @@
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            transition: 1s ease;
+            transition: 1.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
         #entry.hide { opacity: 0; pointer-events: none; }
-        .pulse { animation: p 2s infinite; letter-spacing: 2px; text-transform: uppercase; font-size: 12px; opacity: 0.5; }
-        @keyframes p { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
+        .pulse { animation: p 2s infinite; letter-spacing: 4px; text-transform: uppercase; font-size: 11px; font-weight: 300; }
+        @keyframes p { 0%, 100% { opacity: 0.1; } 50% { opacity: 0.7; } }
 
-        /* CONTENT */
+        /* ACRYLIC CONTENT */
         .container { display: flex; justify-content: center; align-items: center; height: 100vh; }
         
-        /* Acrylic Card Style */
         .profile-card {
             background: var(--glass);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
             border: 1px solid var(--border);
-            padding: 40px;
-            border-radius: 15px;
+            padding: 50px 35px;
+            border-radius: 12px;
             text-align: center;
-            width: 380px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+            width: 360px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.9);
         }
 
-        h1 { font-size: 24px; margin-bottom: 20px; letter-spacing: 1px; font-weight: 400; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+        h1 { font-size: 22px; margin-bottom: 25px; letter-spacing: 2px; font-weight: 400; text-transform: lowercase; }
         
         .info-box {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--border);
-            padding: 12px;
+            padding: 14px;
             border-radius: 8px;
             font-size: 13px;
             margin-bottom: 12px;
             color: #ddd;
+            letter-spacing: 0.5px;
         }
 
-        /* SOCIAL ICONS */
-        .socials { display: flex; justify-content: center; gap: 18px; margin-top: 25px; }
-        .socials a { color: white; opacity: 0.5; transition: 0.3s ease; text-decoration: none; }
-        .socials a:hover { opacity: 1; transform: scale(1.2); }
+        /* BETTER SOCIAL ICONS */
+        .socials { display: flex; justify-content: center; gap: 25px; margin-top: 30px; }
+        .socials a { color: white; font-size: 20px; opacity: 0.4; transition: 0.4s; text-decoration: none; }
+        .socials a:hover { opacity: 1; transform: translateY(-5px); text-shadow: 0 0 15px rgba(255,255,255,0.5); }
 
-        /* VIEW COUNTER UI */
-        .views { position: fixed; bottom: 20px; left: 20px; font-size: 12px; opacity: 0.4; display: flex; align-items: center; gap: 5px; }
+        .views { position: fixed; bottom: 25px; left: 25px; font-size: 10px; opacity: 0.3; letter-spacing: 1px; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -97,10 +97,10 @@
     <div id="cursor-dot"></div>
 
     <div id="entry" onclick="enterSite()">
-        <div class="pulse">click to view profile</div>
+        <div class="pulse">click to enter</div>
     </div>
 
-    <video loop playsinline id="bg-video">
+    <video id="bg-video" loop playsinline>
         <source src="https://files.catbox.moe/kqy3zv.mp4" type="video/mp4">
     </video>
 
@@ -112,59 +112,51 @@
             <div class="info-box">Discord: .tubiu</div>
 
             <div class="socials">
-                <a href="https://open.spotify.com/user/ypzl18cpzin19zec9bfb31575?si=f26ffe2191794829" target="_blank"><i data-lucide="music"></i></a>
-                <a href="https://www.roblox.com/users/10650135323/profile" target="_blank"><i data-lucide="gamepad-2"></i></a>
-                <a href="https://www.tiktok.com/@tubiu_" target="_blank"><i data-lucide="video"></i></a>
-                <a href="https://steamcommunity.com/id/Tubiu/" target="_blank"><i data-lucide="monitor"></i></a>
+                <a href="https://open.spotify.com/user/ypzl18cpzin19zec9bfb31575?si=f26ffe2191794829" target="_blank"><i class="fa-brands fa-spotify"></i></a>
+                <a href="https://www.roblox.com/users/10650135323/profile" target="_blank"><i class="fa-solid fa-cube"></i></a>
+                <a href="https://www.tiktok.com/@tubiu_" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+                <a href="https://steamcommunity.com/id/Tubiu/" target="_blank"><i class="fa-brands fa-steam"></i></a>
             </div>
         </div>
     </div>
 
     <div class="views">
-        <i data-lucide="eye" size="14"></i> 104
+        Views: 104
     </div>
 
     <script>
-        lucide.createIcons();
-
-        // 1. TYPEWRITER TITLE EFFECT (@t, @tu, etc)
+        // 1. UPDATED TYPEWRITER TITLE (@T, @Tu, etc)
         const titleTag = document.getElementById('typewriter-title');
-        const phrases = ["@t", "@tu", "@tub", "@tubi", "@tubiu"];
+        const phrases = ["@T", "@Tu", "@Tub", "@Tubi", "@Tubiu"];
         let phraseIndex = 0;
         let isAdding = true;
 
         function updateTitle() {
             titleTag.innerText = phrases[phraseIndex];
-            
             if (isAdding) {
-                if (phraseIndex < phrases.length - 1) {
-                    phraseIndex++;
-                } else {
-                    isAdding = false;
-                }
+                if (phraseIndex < phrases.length - 1) phraseIndex++;
+                else isAdding = false;
             } else {
-                if (phraseIndex > 0) {
-                    phraseIndex--;
-                } else {
-                    isAdding = true;
-                }
+                if (phraseIndex > 0) phraseIndex--;
+                else isAdding = true;
             }
-            setTimeout(updateTitle, 400);
+            setTimeout(updateTitle, 500);
         }
         updateTitle();
 
-        // 2. SMOOTH DOT CURSOR
+        // 2. CURSOR LOGIC
         const dot = document.getElementById('cursor-dot');
         document.addEventListener('mousemove', (e) => {
             dot.style.left = e.clientX + 'px';
             dot.style.top = e.clientY + 'px';
         });
 
-        // 3. ENTER LOGIC (FIXES VIDEO NOT SHOWING)
+        // 3. FORCE VIDEO LOAD ON CLICK
         function enterSite() {
             document.getElementById('entry').classList.add('hide');
             const video = document.getElementById('bg-video');
-            video.style.display = 'block'; // Make video visible
+            video.style.visibility = 'visible';
+            video.load(); // Forces the browser to fetch the file
             video.muted = false;
             video.volume = 0.4;
             video.play();
