@@ -3,25 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tubiuwu | Profile</title>
+    <title id="typewriter-title">@t</title>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
-            --glass: rgba(0, 0, 0, 0.6);
+            /* Acrylic / Frosted Glass effect */
+            --glass: rgba(255, 255, 255, 0.05);
             --border: rgba(255, 255, 255, 0.1);
         }
 
         /* CUSTOM CURSOR */
-        * { cursor: none; } /* Hides real cursor */
+        * { cursor: none !important; }
         #cursor-dot {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             background: white;
             border-radius: 50%;
             position: fixed;
             pointer-events: none;
-            z-index: 999;
-            transition: transform 0.1s ease-out;
+            z-index: 9999;
+            box-shadow: 0 0 10px rgba(255,255,255,0.8);
         }
 
         body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: 'Inter', sans-serif; background: #000; color: white; }
@@ -33,9 +34,10 @@
             bottom: 0;
             min-width: 100%;
             min-height: 100%;
-            z-index: -1;
-            filter: brightness(0.4);
+            z-index: -2;
+            filter: brightness(0.5);
             object-fit: cover;
+            display: none; /* Hidden until enter */
         }
 
         /* ENTRY SCREEN */
@@ -46,7 +48,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 100;
+            z-index: 1000;
             transition: 1s ease;
         }
         #entry.hide { opacity: 0; pointer-events: none; }
@@ -55,29 +57,39 @@
 
         /* CONTENT */
         .container { display: flex; justify-content: center; align-items: center; height: 100vh; }
+        
+        /* Acrylic Card Style */
         .profile-card {
             background: var(--glass);
             backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             border: 1px solid var(--border);
             padding: 40px;
-            border-radius: 12px;
+            border-radius: 15px;
             text-align: center;
-            width: 350px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            width: 380px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
         }
 
-        h1 { font-size: 24px; margin-bottom: 20px; letter-spacing: 1px; font-weight: 400; }
+        h1 { font-size: 24px; margin-bottom: 20px; letter-spacing: 1px; font-weight: 400; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+        
         .info-box {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--border);
             padding: 12px;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 13px;
-            margin-bottom: 10px;
-            color: #ccc;
+            margin-bottom: 12px;
+            color: #ddd;
         }
 
-        .socials { display: flex; justify-content: center; gap: 20px; margin-top: 25px; opacity: 0.6; }
+        /* SOCIAL ICONS */
+        .socials { display: flex; justify-content: center; gap: 18px; margin-top: 25px; }
+        .socials a { color: white; opacity: 0.5; transition: 0.3s ease; text-decoration: none; }
+        .socials a:hover { opacity: 1; transform: scale(1.2); }
+
+        /* VIEW COUNTER UI */
+        .views { position: fixed; bottom: 20px; left: 20px; font-size: 12px; opacity: 0.4; display: flex; align-items: center; gap: 5px; }
     </style>
 </head>
 <body>
@@ -85,10 +97,9 @@
     <div id="cursor-dot"></div>
 
     <div id="entry" onclick="enterSite()">
-        <div class="pulse">click to enter</div>
+        <div class="pulse">click to view profile</div>
     </div>
 
-    <!-- USING YOUR LINK FOR BOTH VIDEO AND AUDIO -->
     <video loop playsinline id="bg-video">
         <source src="https://files.catbox.moe/kqy3zv.mp4" type="video/mp4">
     </video>
@@ -97,31 +108,64 @@
         <div class="profile-card">
             <h1>tubiuwu</h1>
             
-            <div class="info-box">"Write your custom bio here"</div>
-            <div class="info-box">Discord: @yourname</div>
+            <div class="info-box">"Innocent Sin"</div>
+            <div class="info-box">Discord: .tubiu</div>
 
             <div class="socials">
-                <i data-lucide="github"></i>
-                <i data-lucide="instagram"></i>
-                <i data-lucide="message-circle"></i>
+                <a href="https://open.spotify.com/user/ypzl18cpzin19zec9bfb31575?si=f26ffe2191794829" target="_blank"><i data-lucide="music"></i></a>
+                <a href="https://www.roblox.com/users/10650135323/profile" target="_blank"><i data-lucide="gamepad-2"></i></a>
+                <a href="https://www.tiktok.com/@tubiu_" target="_blank"><i data-lucide="video"></i></a>
+                <a href="https://steamcommunity.com/id/Tubiu/" target="_blank"><i data-lucide="monitor"></i></a>
             </div>
         </div>
+    </div>
+
+    <div class="views">
+        <i data-lucide="eye" size="14"></i> 104
     </div>
 
     <script>
         lucide.createIcons();
 
-        // Custom Cursor Logic
+        // 1. TYPEWRITER TITLE EFFECT (@t, @tu, etc)
+        const titleTag = document.getElementById('typewriter-title');
+        const phrases = ["@t", "@tu", "@tub", "@tubi", "@tubiu"];
+        let phraseIndex = 0;
+        let isAdding = true;
+
+        function updateTitle() {
+            titleTag.innerText = phrases[phraseIndex];
+            
+            if (isAdding) {
+                if (phraseIndex < phrases.length - 1) {
+                    phraseIndex++;
+                } else {
+                    isAdding = false;
+                }
+            } else {
+                if (phraseIndex > 0) {
+                    phraseIndex--;
+                } else {
+                    isAdding = true;
+                }
+            }
+            setTimeout(updateTitle, 400);
+        }
+        updateTitle();
+
+        // 2. SMOOTH DOT CURSOR
         const dot = document.getElementById('cursor-dot');
         document.addEventListener('mousemove', (e) => {
             dot.style.left = e.clientX + 'px';
             dot.style.top = e.clientY + 'px';
         });
 
+        // 3. ENTER LOGIC (FIXES VIDEO NOT SHOWING)
         function enterSite() {
             document.getElementById('entry').classList.add('hide');
             const video = document.getElementById('bg-video');
-            video.muted = false; // Unmutes the video so audio plays
+            video.style.display = 'block'; // Make video visible
+            video.muted = false;
             video.volume = 0.4;
             video.play();
         }
