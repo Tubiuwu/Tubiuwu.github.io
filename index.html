@@ -9,8 +9,9 @@
 
 <style>
 :root {
-    --glass: rgba(255, 255, 255, 0.05); /* Made more transparent for glass effect */
+    --glass: rgba(255, 255, 255, 0.05);
     --border: rgba(255, 255, 255, 0.1);
+    --ivy-green: #4ade80; /* New Ivy Green Accent Color */
 }
 
 /* CURSOR */
@@ -29,11 +30,15 @@
     will-change: transform;
 }
 
-body,html {
+html {
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+}
+
+body {
     margin: 0;
     padding: 0;
-    height: 100%;
-    overflow: hidden;
+    overflow-x: hidden;
     font-family: 'Inter', sans-serif;
     background: #000;
     color: white;
@@ -46,6 +51,7 @@ body,html {
     object-fit: cover;
     z-index: 0;
     filter: brightness(0.3);
+    pointer-events: none; 
 }
 
 #entry {
@@ -60,172 +66,144 @@ body,html {
 }
 #entry.hide { opacity: 0; pointer-events: none; }
 
-.container {
+/* PAGE SECTIONS */
+.page-section {
+    position: relative;
+    height: 100vh;
+    width: 100vw;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    position: relative;
     z-index: 1;
-    padding: 20px;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
 }
 
-.profile-card {
+/* SCROLL WRAPPER */
+.scroll-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    will-change: transform, opacity;
+}
+
+/* SCROLL INDICATOR */
+.scroll-indicator {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    padding: 12px 25px;
+    border-radius: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.6);
+    animation: bounce 2s infinite cubic-bezier(0.2, 0.8, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+    40% { transform: translateX(-50%) translateY(-10px); }
+    60% { transform: translateX(-50%) translateY(-5px); }
+}
+
+/* 3D TILT CARD BASE */
+.tilt-card {
     position: relative;
     background: var(--glass);
-    backdrop-filter: blur(15px); /* Increased blur for glass look */
+    backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     border: 1px solid var(--border);
     padding: 60px 20px 40px;
     border-radius: 24px;
-    width: 100%;
+    width: 90%; 
     max-width: 420px;
     text-align: center;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    box-shadow: 0 15px 40px 0 rgba(0, 0, 0, 0.4);
+    
+    transform-style: preserve-3d;
+    will-change: transform;
 }
 
-/* IVY */
+/* IVY DECORATIONS */
 .ivy {
     position: absolute;
     pointer-events: none;
     z-index: 10;
     filter: brightness(0.6);
+    transform: translateZ(20px); 
 }
-.ivy-top-l {
-    top: -30px; left: 10px;
-    width: 220px; height: 60px;
-    transform: rotate(85deg) scaleY(-1);
-    object-fit: contain;
-}
-.ivy-top-r {
-    top: -30px; right: 10px;
-    width: 220px; height: 60px;
-    transform: rotate(-85deg);
-    object-fit: contain;
-}
-.ivy-side-l {
-    top: 20px; left: -50px;
-    width: 100px; height: 350px;
-    transform: rotate(5deg);
-    object-fit: contain;
-}
-.ivy-side-r {
-    top: 20px; right: -50px;
-    width: 100px; height: 350px;
-    transform: scaleX(-1) rotate(5deg);
-    object-fit: contain;
-}
+.ivy-top-l { top: -30px; left: 10px; width: 220px; height: 60px; transform: rotate(85deg) scaleY(-1) translateZ(20px); object-fit: contain; }
+.ivy-top-r { top: -30px; right: 10px; width: 220px; height: 60px; transform: rotate(-85deg) translateZ(20px); object-fit: contain; }
+.ivy-side-l { top: 20px; left: -50px; width: 100px; height: 350px; transform: rotate(5deg) translateZ(20px); object-fit: contain; }
+.ivy-side-r { top: 20px; right: -50px; width: 100px; height: 350px; transform: scaleX(-1) rotate(5deg) translateZ(20px); object-fit: contain; }
 
 /* H1 Animated Glow */
-h1 {
-    font-size: 38px;
-    margin: 0 0 5px;
-    letter-spacing: 2px;
-    animation: glowPulse 2s infinite;
-}
+h1 { font-size: 38px; margin: 0 0 5px; letter-spacing: 2px; animation: glowPulse 2s infinite; transform: translateZ(10px); }
+.tracker-card h1 { font-size: 28px; margin-bottom: 25px; }
 
 @keyframes glowPulse {
     0%, 100% { opacity: 0.8; text-shadow: 0 0 8px rgba(255,255,255,0.4); }
     50% { opacity: 1; text-shadow: 0 0 15px white, 0 0 25px white; }
 }
 
-.typing-container {
-    height: 24px;
-    margin-bottom: 20px;
-    font-size: 16px;
-    color: #ddd;
-}
-
-.cursor-bar {
-    animation: blink 0.8s infinite;
-}
+.typing-container { height: 24px; margin-bottom: 20px; font-size: 16px; color: #ddd; transform: translateZ(10px); }
+.cursor-bar { animation: blink 0.8s infinite; }
 @keyframes blink { 50% { opacity: 0; } }
 
 /* Location Tag */
 .location {
-    margin-bottom: 20px;
-    font-size: 15px;
-    color: white;
+    margin-bottom: 20px; font-size: 15px; color: white;
     text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
+    display: flex; justify-content: center; align-items: center; gap: 8px;
+    transform: translateZ(15px);
 }
-.location i {
-    filter: drop-shadow(0 0 6px white);
-}
+.location i { filter: drop-shadow(0 0 6px white); }
 
-.link-btn {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.08);
-    padding: 16px;
+/* ABOUT ME LAYOUT */
+.about-title { font-size: 22px; letter-spacing: 1px; margin-bottom: 15px; text-shadow: 0 0 10px rgba(255,255,255,0.3); transform: translateZ(15px); }
+.about-text { font-size: 14px; color: #ccc; line-height: 1.6; text-align: center; padding: 0 15px; margin-bottom: 20px; transform: translateZ(10px); }
+
+/* LANYARD CARD - Background Removed */
+.lanyard-card {
+    width: 85%; max-width: 380px; margin: 0 auto 15px; display: block;
     border-radius: 12px;
-    margin: 0 auto 12px;
-    width: 85%;
-    font-size: 14px;
-    color: #bbb;
-    text-decoration: none;
-    display: block;
+    transition: 0.3s;
+    transform: translateZ(25px);
 }
+.lanyard-card:hover { filter: drop-shadow(0 0 12px rgba(74, 222, 128, 0.2)); }
+
+/* TRACKER UI */
+.tracker-card { max-width: 500px; padding: 40px 25px; }
+.tracker-grid { display: flex; flex-direction: column; gap: 12px; transform: translateZ(15px); }
+.event-row {
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255,255,255,0.05);
+    padding: 15px 20px; border-radius: 12px;
+}
+.event-name { font-size: 14px; color: #ddd; text-align: left; font-weight: bold; }
+.event-timer { font-family: 'Consolas', monospace; font-size: 16px; color: var(--ivy-green); text-shadow: 0 0 8px rgba(74, 222, 128, 0.4); }
 
 /* SOCIALS */
-.socials {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 25px;
-    margin-top: 30px;
-}
-.socials a {
-    color: white;
-    font-size: 20px;
-    opacity: .4;
-    transition: .3s;
-    display: flex;
-    text-decoration: none; /* REMOVES THE LINES */
-}
-.socials a:hover {
-    opacity: 1;
-    transform: translateY(-3px);
-}
-
-/* Custom SVG Size for Roblox */
-.socials a svg {
-    width: 20px;
-    height: 20px;
-    fill: currentColor;
-}
-.socials a:hover svg {
-    filter: drop-shadow(0 0 12px white);
-}
+.socials { display: flex; justify-content: center; align-items: center; gap: 25px; margin-top: 30px; flex-wrap: wrap; transform: translateZ(15px); }
+.socials a { color: white; font-size: 20px; opacity: .4; transition: .3s; display: flex; text-decoration: none; }
+.socials a:hover { opacity: 1; filter: drop-shadow(0 0 12px white); }
+.socials a svg { width: 20px; height: 20px; fill: currentColor; }
 
 /* VOLUME */
-#vol-wrapper {
-    position: fixed;
-    top: 25px;
-    left: 25px;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    background: rgba(0,0,0,0.4);
-    padding: 10px;
-    border-radius: 30px;
-}
-#vol-slider {
-    width: 0;
-    opacity: 0;
-    transition: 0.3s;
-    accent-color: white;
-}
-#vol-wrapper:hover {
-    gap: 12px;
-    padding: 10px 18px;
-}
-#vol-wrapper:hover #vol-slider {
-    width: 80px;
-    opacity: 1;
-}
+#vol-wrapper { position: fixed; top: 25px; left: 25px; z-index: 100; display: flex; align-items: center; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 30px; }
+#mute-icon { pointer-events: auto; }
+#vol-slider { width: 0; opacity: 0; transition: 0.3s; accent-color: white; pointer-events: auto; }
+#vol-wrapper:hover { gap: 12px; padding: 10px 18px; }
+#vol-wrapper:hover #vol-slider { width: 80px; opacity: 1; }
 
 @media (max-width: 768px) {
     #vol-wrapper { display: none !important; }
@@ -252,73 +230,222 @@ h1 {
 </audio>
 
 <div id="vol-wrapper">
-    <i class="fa-solid fa-volume-high"></i>
+    <i class="fa-solid fa-volume-high" id="mute-icon"></i>
     <input type="range" id="vol-slider" min="0" max="1" step="0.01" value="0.5">
 </div>
 
-<div class="container">
-<div class="profile-card">
+<section class="page-section">
+    <div class="scroll-wrapper">
+        <div class="tilt-card">
+            <img src="https://files.catbox.moe/9blqvh.png" class="ivy ivy-top-l">
+            <img src="https://files.catbox.moe/9blqvh.png" class="ivy ivy-top-r">
+            <img src="https://files.catbox.moe/9blqvh.png" class="ivy ivy-side-l">
+            <img src="https://files.catbox.moe/9blqvh.png" class="ivy ivy-side-r">
 
-    <img src="https://files.catbox.moe/9blqvh.png" class="ivy ivy-top-l">
-    <img src="https://files.catbox.moe/9blqvh.png" class="ivy ivy-top-r">
-    <img src="https://files.catbox.moe/9blqvh.png" class="ivy ivy-side-l">
-    <img src="https://files.catbox.moe/9blqvh.png" class="ivy ivy-side-r">
+            <h1>Tubiu</h1>
 
-    <h1>Tubiu</h1>
+            <div class="typing-container">
+                <span id="typed-text"></span><span class="cursor-bar">|</span>
+            </div>
 
-    <div class="typing-container">
-        <span id="typed-text"></span><span class="cursor-bar">|</span>
+            <div class="location">
+                <i class="fa-solid fa-location-dot"></i> Türkiye
+            </div>
+
+            <a href="https://discord.com/users/941422456802005063" target="_blank">
+                <img src="https://lanyard.cnrad.dev/api/941422456802005063?theme=dark&bg=transparent" alt="Discord Status" class="lanyard-card">
+            </a>
+
+            <div class="socials">
+                <a href="https://open.spotify.com/user/ypzl18cpzin19zec9bfb31575" target="_blank"><i class="fa-brands fa-spotify"></i></a>
+                <a href="https://anilist.co/user/Tubiu/" target="_blank">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6.361 2.362L.195 21.493h4.636l1.353-4.402h8.795l1.354 4.402h4.869L14.75 2.362zM9.54 7.553h.034l3.123 9.77H6.38zM23.805 21.493V14.19h-3.488v7.303z"/>
+                    </svg>
+                </a>
+                <a href="https://www.roblox.com/users/10650135323/profile" target="_blank">
+                    <svg viewBox="0 0 100 100"><path d="M22.5,0L0,77.5L77.5,100L100,22.5L22.5,0z M60,60L40,55L45,35L65,40L60,60z"></path></svg>
+                </a>
+                <a href="https://www.tiktok.com/@tubiu_" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+                <a href="https://steamcommunity.com/id/Tubiu/" target="_blank"><i class="fa-brands fa-steam"></i></a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="scroll-indicator">
+        About Me
+        <i class="fa-solid fa-chevron-down"></i>
+    </div>
+</section>
+
+<section class="page-section">
+    <div class="scroll-wrapper">
+        <div class="tilt-card" style="padding: 50px 20px;">
+            <div class="about-title"><i class="fa-solid fa-user" style="font-size: 16px; margin-right: 8px; color: var(--ivy-green);"></i> About Me</div>
+            <p class="about-text">
+                Hi, I’m Aras. I spend most of my time listening to Wisp or Ichiko Aoba. When I'm playing, I’m usually playing Deepwoken I mostly run support, but I do a bit of PvP on the side. I also play CS:GO, Lethal Company, and Repo now and then, so feel free to add me on Steam or Discord if you want to play. In my free time, I usually read manga or just get outside. Nice to meet you!            </p>
+            <p class="about-text" style="font-size: 13px; color: #999; font-style: italic;">
+                "Larp till you make it <3"
+            </p>
+        </div>
     </div>
 
-    <div class="location">
-        <i class="fa-solid fa-location-dot"></i> Türkiye
+    <div class="scroll-indicator">
+        Event Timestamps
+        <i class="fa-solid fa-chevron-down"></i>
     </div>
+</section>
 
-    <a class="link-btn">Discord: .tubiu</a>
-
-    <div class="socials">
-        <a href="https://open.spotify.com/user/ypzl18cpzin19zec9bfb31575" target="_blank">
-            <i class="fa-brands fa-spotify"></i>
-        </a>
-
-        <a href="https://www.roblox.com/users/10650135323/profile" target="_blank">
-            <svg viewBox="0 0 100 100">
-                <path d="M22.5,0L0,77.5L77.5,100L100,22.5L22.5,0z M60,60L40,55L45,35L65,40L60,60z"></path>
-            </svg>
-        </a>
-
-        <a href="https://www.tiktok.com/@tubiu_" target="_blank">
-            <i class="fa-brands fa-tiktok"></i>
-        </a>
-
-        <a href="https://steamcommunity.com/id/Tubiu/" target="_blank">
-            <i class="fa-brands fa-steam"></i>
-        </a>
+<section class="page-section">
+    <div class="scroll-wrapper">
+        <div class="tilt-card tracker-card">
+            <h1>Event cycles</h1>
+            
+            <div class="tracker-grid">
+                <div class="event-row">
+                    <div class="event-name">Doom of Caeranthil</div>
+                    <div class="event-timer" id="timer-caeranthil">Loading...</div>
+                </div>
+                <div class="event-row">
+                    <div class="event-name">Cinders of Etris</div>
+                    <div class="event-timer" id="timer-etris">Loading...</div>
+                </div>
+                <div class="event-row">
+                    <div class="event-name">Carnival of Hearts</div>
+                    <div class="event-timer" id="timer-carnival">Loading...</div>
+                </div>
+                <div class="event-row">
+                    <div class="event-name">Interluminary Parasol</div>
+                    <div class="event-timer" id="timer-parasol">Loading...</div>
+                </div>
+                <div class="event-row">
+                    <div class="event-name">Battle Royale</div>
+                    <div class="event-timer" id="timer-royale">Loading...</div>
+                </div>
+            </div>
+        </div>
     </div>
+</section>
 
-</div>
-</div>
 
 <script>
-/* SMOOTH REFRESH-SYNCED CURSOR */
-const dot = document.getElementById("cursor-dot");
-let mouseX = 0, mouseY = 0;
-let currentX = 0, currentY = 0;
+/* DYNAMIC SCROLL ANIMATION ENGINE */
+const scrollWrappers = document.querySelectorAll('.scroll-wrapper');
 
-document.addEventListener("mousemove", (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
+function updateScroll() {
+    const wh = window.innerHeight;
+    scrollWrappers.forEach(wrapper => {
+        const rect = wrapper.getBoundingClientRect();
+        const center = rect.top + (rect.height / 2);
+        
+        const dist = Math.abs(center - (wh / 2));
+        const maxDist = wh * 0.7; 
+        
+        let progress = dist / maxDist;
+        progress = Math.max(0, Math.min(1, progress)); 
+        
+        const opacity = 1 - Math.pow(progress, 2); 
+        const scale = 1 - (progress * 0.3); 
+
+        wrapper.style.opacity = opacity;
+        wrapper.style.transform = `scale(${scale})`;
+    });
+}
+window.addEventListener('scroll', updateScroll);
+updateScroll(); 
+
+
+/* BUTTERY SMOOTH 3D LERP ENGINE */
+const cards = document.querySelectorAll('.tilt-card');
+
+cards.forEach(card => {
+    let bounds;
+    let targetX = 0; let targetY = 0;
+    let currentX = 0; let currentY = 0;
+    let isHovering = false;
+
+    card.addEventListener('mouseenter', () => {
+        bounds = card.getBoundingClientRect();
+        isHovering = true;
+    });
+
+    card.addEventListener('mousemove', (e) => {
+        if (!isHovering) return;
+        const x = e.clientX - bounds.left;
+        const y = e.clientY - bounds.top;
+        const centerX = bounds.width / 2;
+        const centerY = bounds.height / 2;
+        
+        targetX = ((centerY - y) / centerY) * 4;
+        targetY = ((x - centerX) / centerX) * 4;
+    });
+
+    card.addEventListener('mouseleave', () => {
+        isHovering = false;
+        targetX = 0; 
+        targetY = 0;
+    });
+
+    function render3D() {
+        currentX += (targetX - currentX) * 0.1;
+        currentY += (targetY - currentY) * 0.1;
+        
+        card.style.transform = `perspective(1000px) rotateX(${currentX}deg) rotateY(${currentY}deg) scale3d(${isHovering ? 1.02 : 1}, ${isHovering ? 1.02 : 1}, ${isHovering ? 1.02 : 1})`;
+        requestAnimationFrame(render3D);
+    }
+    render3D();
 });
 
-function render() {
-    // High lerp value (0.35) makes it feel "instant" but removes the teleport glitching
-    currentX += (mouseX - currentX) * 0.35;
-    currentY += (mouseY - currentY) * 0.35;
-    
-    dot.style.transform = `translate3d(${currentX - 3}px, ${currentY - 3}px, 0)`;
-    requestAnimationFrame(render);
+
+/* EVENT TRACKER LOGIC */
+const anchors = {
+    "caeranthil": { anchor: 1777953600, interval: 7200 },
+    "etris": { anchor: 1777957200, interval: 7200 },     
+    "carnival": { anchor: 1777957200, interval: 5400 },   
+    "parasol": { anchor: 1777959000, interval: 5400 },    
+    "royale": { anchor: 1777960800, interval: 5400 }     
+};
+
+function formatTime(seconds) {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
 }
-render();
+
+function updateTimers() {
+    const now = Math.floor(Date.now() / 1000);
+    for (const [eventName, data] of Object.entries(anchors)) {
+        const elapsed = now - data.anchor;
+        let nextEvent = elapsed < 0 ? data.anchor : now + (data.interval - (elapsed % data.interval));
+        
+        const element = document.getElementById(`timer-${eventName}`);
+        const timeRemaining = nextEvent - now;
+        
+        element.innerText = formatTime(timeRemaining);
+        element.style.color = timeRemaining < 300 ? "#f43f5e" : "#4ade80"; // Updates to Green matching Ivy theme
+    }
+}
+updateTimers();
+setInterval(updateTimers, 1000);
+
+
+/* SMOOTH CURSOR */
+const dot = document.getElementById("cursor-dot");
+let mouseX = 0, mouseY = 0;
+let curX = 0, curY = 0;
+
+document.addEventListener("mousemove", (e) => {
+    mouseX = e.clientX; mouseY = e.clientY;
+});
+function renderCursor() {
+    curX += (mouseX - curX) * 0.35;
+    curY += (mouseY - curY) * 0.35;
+    dot.style.transform = `translate3d(${curX - 3}px, ${curY - 3}px, 0)`;
+    requestAnimationFrame(renderCursor);
+}
+renderCursor();
+
 
 /* TYPEWRITER */
 const phrases = ["I love you.", "just breathe.", "stay a while.", "drifting away.", "Innocent Sin"];
@@ -346,16 +473,34 @@ function type() {
 }
 type();
 
+
+/* AUDIO CONTROLS */
+const bgAudio = document.getElementById("bg-audio");
+const muteIcon = document.getElementById("mute-icon");
+const volSlider = document.getElementById("vol-slider");
+
 function start() {
     document.getElementById("entry").classList.add("hide");
     document.getElementById("bg-video").play();
-    const a = document.getElementById("bg-audio");
-    a.volume = 0.5;
-    a.play();
+    bgAudio.volume = volSlider.value;
+    bgAudio.play();
 }
 
-document.getElementById("vol-slider").oninput = (e) => {
-    document.getElementById("bg-audio").volume = e.target.value;
+muteIcon.onclick = () => {
+    bgAudio.muted = !bgAudio.muted;
+    if (bgAudio.muted) {
+        muteIcon.classList.replace("fa-volume-high", "fa-volume-xmark");
+    } else {
+        muteIcon.classList.replace("fa-volume-xmark", "fa-volume-high");
+        if (volSlider.value == 0) { volSlider.value = 0.5; bgAudio.volume = 0.5; }
+    }
+};
+
+volSlider.oninput = (e) => {
+    const val = parseFloat(e.target.value);
+    bgAudio.volume = val;
+    if (val > 0 && bgAudio.muted) { bgAudio.muted = false; muteIcon.classList.replace("fa-volume-xmark", "fa-volume-high"); }
+    else if (val === 0 && !bgAudio.muted) { bgAudio.muted = true; muteIcon.classList.replace("fa-volume-high", "fa-volume-xmark"); }
 };
 </script>
 
