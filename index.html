@@ -11,10 +11,10 @@
 :root {
     --glass: rgba(255, 255, 255, 0.05);
     --border: rgba(255, 255, 255, 0.1);
-    --ivy-green: #4ade80; /* New Ivy Green Accent Color */
+    --ivy-green: #4ade80; /* accent */
 }
 
-/* CURSOR */
+/* the cursor */
 * { cursor: none !important; }
 
 #cursor-dot {
@@ -66,7 +66,7 @@ body {
 }
 #entry.hide { opacity: 0; pointer-events: none; }
 
-/* PAGE SECTIONS */
+/* pages */
 .page-section {
     position: relative;
     height: 100vh;
@@ -79,7 +79,7 @@ body {
     scroll-snap-stop: always;
 }
 
-/* SCROLL WRAPPER */
+/* wrap scrol */
 .scroll-wrapper {
     width: 100%;
     display: flex;
@@ -88,7 +88,7 @@ body {
     will-change: transform, opacity;
 }
 
-/* SCROLL INDICATOR */
+/* indicate scroll */
 .scroll-indicator {
     position: absolute;
     bottom: 50px;
@@ -115,7 +115,7 @@ body {
     60% { transform: translateX(-50%) translateY(-5px); }
 }
 
-/* 3D TILT CARD BASE */
+/* 3d base */
 .tilt-card {
     position: relative;
     background: var(--glass);
@@ -133,7 +133,7 @@ body {
     will-change: transform;
 }
 
-/* IVY DECORATIONS */
+/* ivy deco */
 .ivy {
     position: absolute;
     pointer-events: none;
@@ -146,7 +146,7 @@ body {
 .ivy-side-l { top: 20px; left: -50px; width: 100px; height: 350px; transform: rotate(5deg) translateZ(20px); object-fit: contain; }
 .ivy-side-r { top: 20px; right: -50px; width: 100px; height: 350px; transform: scaleX(-1) rotate(5deg) translateZ(20px); object-fit: contain; }
 
-/* H1 Animated Glow */
+/* animated h1 */
 h1 { font-size: 38px; margin: 0 0 5px; letter-spacing: 2px; animation: glowPulse 2s infinite; transform: translateZ(10px); }
 .tracker-card h1 { font-size: 28px; margin-bottom: 25px; }
 
@@ -159,7 +159,7 @@ h1 { font-size: 38px; margin: 0 0 5px; letter-spacing: 2px; animation: glowPulse
 .cursor-bar { animation: blink 0.8s infinite; }
 @keyframes blink { 50% { opacity: 0; } }
 
-/* Location Tag */
+/* location  */
 .location {
     margin-bottom: 20px; font-size: 15px; color: white;
     text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
@@ -168,11 +168,11 @@ h1 { font-size: 38px; margin: 0 0 5px; letter-spacing: 2px; animation: glowPulse
 }
 .location i { filter: drop-shadow(0 0 6px white); }
 
-/* ABOUT ME LAYOUT */
+/* me */
 .about-title { font-size: 22px; letter-spacing: 1px; margin-bottom: 15px; text-shadow: 0 0 10px rgba(255,255,255,0.3); transform: translateZ(15px); }
 .about-text { font-size: 14px; color: #ccc; line-height: 1.6; text-align: center; padding: 0 15px; margin-bottom: 20px; transform: translateZ(10px); }
 
-/* LANYARD CARD - Background Removed */
+/* lanyward */
 .lanyard-card {
     width: 85%; max-width: 380px; margin: 0 auto 15px; display: block;
     border-radius: 12px;
@@ -181,7 +181,7 @@ h1 { font-size: 38px; margin: 0 0 5px; letter-spacing: 2px; animation: glowPulse
 }
 .lanyard-card:hover { filter: drop-shadow(0 0 12px rgba(74, 222, 128, 0.2)); }
 
-/* TRACKER UI */
+/* track */
 .tracker-card { max-width: 500px; padding: 40px 25px; }
 .tracker-grid { display: flex; flex-direction: column; gap: 12px; transform: translateZ(15px); }
 .event-row {
@@ -192,13 +192,13 @@ h1 { font-size: 38px; margin: 0 0 5px; letter-spacing: 2px; animation: glowPulse
 .event-name { font-size: 14px; color: #ddd; text-align: left; font-weight: bold; }
 .event-timer { font-family: 'Consolas', monospace; font-size: 16px; color: var(--ivy-green); text-shadow: 0 0 8px rgba(74, 222, 128, 0.4); }
 
-/* SOCIALS */
+/* social */
 .socials { display: flex; justify-content: center; align-items: center; gap: 25px; margin-top: 30px; flex-wrap: wrap; transform: translateZ(15px); }
 .socials a { color: white; font-size: 20px; opacity: .4; transition: .3s; display: flex; text-decoration: none; }
 .socials a:hover { opacity: 1; filter: drop-shadow(0 0 12px white); }
 .socials a svg { width: 20px; height: 20px; fill: currentColor; }
 
-/* VOLUME */
+/* volume */
 #vol-wrapper { position: fixed; top: 25px; left: 25px; z-index: 100; display: flex; align-items: center; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 30px; }
 #mute-icon { pointer-events: auto; }
 #vol-slider { width: 0; opacity: 0; transition: 0.3s; accent-color: white; pointer-events: auto; }
@@ -329,7 +329,7 @@ h1 { font-size: 38px; margin: 0 0 5px; letter-spacing: 2px; animation: glowPulse
 
 
 <script>
-/* DYNAMIC SCROLL ANIMATION ENGINE */
+/* Dynamic scroll */
 const scrollWrappers = document.querySelectorAll('.scroll-wrapper');
 
 function updateScroll() {
@@ -355,7 +355,7 @@ window.addEventListener('scroll', updateScroll);
 updateScroll(); 
 
 
-/* BUTTERY SMOOTH 3D LERP ENGINE */
+/* 3d lerp engine */
 const cards = document.querySelectorAll('.tilt-card');
 
 cards.forEach(card => {
@@ -397,7 +397,7 @@ cards.forEach(card => {
 });
 
 
-/* EVENT TRACKER LOGIC */
+/* event tracer faw */
 const anchors = {
     "caeranthil": { anchor: 1777953600, interval: 7200 },
     "etris": { anchor: 1777957200, interval: 7200 },     
@@ -447,7 +447,7 @@ function renderCursor() {
 renderCursor();
 
 
-/* TYPEWRITER */
+/* type writer */
 const phrases = ["I love you.", "just breathe.", "stay a while.", "drifting away.", "Innocent Sin"];
 let p = 0, i = 0, del = false;
 
@@ -474,7 +474,7 @@ function type() {
 type();
 
 
-/* AUDIO CONTROLS */
+/* cnotrol audio */
 const bgAudio = document.getElementById("bg-audio");
 const muteIcon = document.getElementById("mute-icon");
 const volSlider = document.getElementById("vol-slider");
