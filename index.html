@@ -1,508 +1,1076 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tubiu</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aras</title>
+  <meta name="description" content="everything about me">
+  <meta name="theme-color" content="#000">
+  <link rel="icon" href="images/pfp.jpg" type="image/jpeg">
+  <style>
+    @font-face {
+      font-family: Sora;
+      src: url("https://cdn.jsdelivr.net/fontsource/fonts/sora@latest/latin-400-normal.woff2") format("woff2");
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: Sora;
+      src: url("https://cdn.jsdelivr.net/fontsource/fonts/sora@latest/latin-500-normal.woff2") format("woff2");
+      font-style: normal;
+      font-weight: 500;
+      font-display: swap;
+    }
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    :root {
+      color-scheme: dark;
+      font-family: Sora, system-ui, -apple-system, sans-serif;
+      font-synthesis: none;
+      color: #fff;
+      background: #000;
+    }
 
-<style>
-:root {
-    --glass: rgba(255, 255, 255, 0.05);
-    --border: rgba(255, 255, 255, 0.1);
-    --ivy-green: #4ade80; /* accent */
-}
+    * { box-sizing: border-box; }
 
-/* the cursor */
-* { cursor: none !important; }
+    body {
+      margin: 0;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      overflow-wrap: anywhere;
+    }
 
-#cursor-dot {
-    width: 6px;
-    height: 6px;
-    background: white;
-    border-radius: 50%;
-    position: fixed;
-    top: 0; left: 0;
-    pointer-events: none;
-    z-index: 9999;
-    box-shadow: 0 0 10px 1px white;
-    will-change: transform;
-}
+    main {
+      flex: 1;
+      display: block;
+      padding: 56px 32px;
+    }
 
-html {
-    scroll-snap-type: y mandatory;
-    scroll-behavior: smooth;
-}
+    .home {
+      width: min(100%, 1060px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      gap: 80px;
+      align-items: start;
+    }
 
-body {
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-    font-family: 'Inter', sans-serif;
-    background: #000;
-    color: white;
-}
+    .home a { color: inherit; }
 
-#bg-video {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    object-fit: cover;
-    z-index: 0;
-    filter: brightness(0.3);
-    pointer-events: none; 
-}
+    .home-intro {
+      position: sticky;
+      top: 48px;
+      min-width: 0;
+    }
 
-#entry {
-    position: fixed;
-    inset: 0;
-    background: black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    transition: 1s ease;
-}
-#entry.hide { opacity: 0; pointer-events: none; }
+    .image-frame {
+      display: block;
+      position: relative;
+      flex-shrink: 0;
+      overflow: hidden;
+      background: #111;
+    }
 
-/* pages */
-.page-section {
-    position: relative;
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-}
+    .image-frame > img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      object-fit: cover;
+    }
 
-/* wrap scrol */
-.scroll-wrapper {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    will-change: transform, opacity;
-}
+    .image-frame--home {
+      width: 136px;
+      height: 136px;
+      border-radius: 50%;
+    }
 
-/* indicate scroll */
-.scroll-indicator {
-    position: absolute;
-    bottom: 50px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--border);
-    padding: 12px 25px;
-    border-radius: 50px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.6);
-    animation: bounce 2s infinite cubic-bezier(0.2, 0.8, 0.2, 1);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-}
-@keyframes bounce {
-    0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
-    40% { transform: translateX(-50%) translateY(-10px); }
-    60% { transform: translateX(-50%) translateY(-5px); }
-}
+    .image-frame--artist {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
 
-/* 3d base */
-.tilt-card {
-    position: relative;
-    background: var(--glass);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid var(--border);
-    padding: 60px 20px 40px;
-    border-radius: 24px;
-    width: 90%; 
-    max-width: 420px;
-    text-align: center;
-    box-shadow: 0 15px 40px 0 rgba(0, 0, 0, 0.4);
-    
-    transform-style: preserve-3d;
-    will-change: transform;
-}
+    .profile-trigger {
+      cursor: pointer;
+      outline-offset: 6px;
+      transition: transform 220ms ease, box-shadow 220ms ease;
+    }
 
-/* ivy deco */
-.ivy {
-    position: absolute;
-    pointer-events: none;
-    z-index: 10;
-    filter: brightness(0.6);
-    transform: translateZ(20px); 
-}
-.ivy-top-l { top: -30px; left: 10px; width: 220px; height: 60px; transform: rotate(85deg) scaleY(-1) translateZ(20px); object-fit: contain; }
-.ivy-top-r { top: -30px; right: 10px; width: 220px; height: 60px; transform: rotate(-85deg) translateZ(20px); object-fit: contain; }
-.ivy-side-l { top: 20px; left: -50px; width: 100px; height: 350px; transform: rotate(5deg) translateZ(20px); object-fit: contain; }
-.ivy-side-r { top: 20px; right: -50px; width: 100px; height: 350px; transform: scaleX(-1) rotate(5deg) translateZ(20px); object-fit: contain; }
+    .profile-trigger:is(:hover, :focus-visible) {
+      transform: scale(1.04);
+      box-shadow: 0 0 0 4px #ffffff10;
+    }
 
-/* animated h1 */
-h1 { font-size: 38px; margin: 0 0 5px; letter-spacing: 2px; animation: glowPulse 2s infinite; transform: translateZ(10px); }
-.tracker-card h1 { font-size: 28px; margin-bottom: 25px; }
+    .home-name {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      margin-top: 24px;
+      min-width: 0;
+    }
 
-@keyframes glowPulse {
-    0%, 100% { opacity: 0.8; text-shadow: 0 0 8px rgba(255,255,255,0.4); }
-    50% { opacity: 1; text-shadow: 0 0 15px white, 0 0 25px white; }
-}
+    .home-intro h1 {
+      margin: 0;
+      font-size: 42px;
+      font-weight: 500;
+      line-height: 1.2;
+      letter-spacing: -0.055em;
+    }
 
-.typing-container { height: 24px; margin-bottom: 20px; font-size: 16px; color: #ddd; transform: translateZ(10px); }
-.cursor-bar { animation: blink 0.8s infinite; }
-@keyframes blink { 50% { opacity: 0; } }
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      color: #43b581;
+      transition: color 200ms ease;
+    }
 
-/* location  */
-.location {
-    margin-bottom: 20px; font-size: 15px; color: white;
-    text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
-    display: flex; justify-content: center; align-items: center; gap: 8px;
-    transform: translateZ(15px);
-}
-.location i { filter: drop-shadow(0 0 6px white); }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #43b581;
+      transition: background 200ms ease;
+    }
 
-/* me */
-.about-title { font-size: 22px; letter-spacing: 1px; margin-bottom: 15px; text-shadow: 0 0 10px rgba(255,255,255,0.3); transform: translateZ(15px); }
-.about-text { font-size: 14px; color: #ccc; line-height: 1.6; text-align: center; padding: 0 15px; margin-bottom: 20px; transform: translateZ(10px); }
+    .home-content {
+      min-width: 0;
+      display: grid;
+      gap: 48px;
+      animation: page-enter 420ms ease-out both;
+      animation-delay: 60ms;
+    }
 
-/* lanyward */
-.lanyard-card {
-    width: 85%; max-width: 380px; margin: 0 auto 15px; display: block;
-    border-radius: 12px;
-    transition: 0.3s;
-    transform: translateZ(25px);
-}
-.lanyard-card:hover { filter: drop-shadow(0 0 12px rgba(74, 222, 128, 0.2)); }
+    .home-intro {
+      animation: page-enter 420ms ease-out both;
+    }
 
-/* track */
-.tracker-card { max-width: 500px; padding: 40px 25px; }
-.tracker-grid { display: flex; flex-direction: column; gap: 12px; transform: translateZ(15px); }
-.event-row {
-    display: flex; justify-content: space-between; align-items: center;
-    background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255,255,255,0.05);
-    padding: 15px 20px; border-radius: 12px;
-}
-.event-name { font-size: 14px; color: #ddd; text-align: left; font-weight: bold; }
-.event-timer { font-family: 'Consolas', monospace; font-size: 16px; color: var(--ivy-green); text-shadow: 0 0 8px rgba(74, 222, 128, 0.4); }
+    @keyframes page-enter {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-/* social */
-.socials { display: flex; justify-content: center; align-items: center; gap: 25px; margin-top: 30px; flex-wrap: wrap; transform: translateZ(15px); }
-.socials a { color: white; font-size: 20px; opacity: .4; transition: .3s; display: flex; text-decoration: none; }
-.socials a:hover { opacity: 1; filter: drop-shadow(0 0 12px white); }
-.socials a svg { width: 20px; height: 20px; fill: currentColor; }
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px 20px;
+      margin-bottom: 20px;
+    }
 
-/* volume */
-#vol-wrapper { position: fixed; top: 25px; left: 25px; z-index: 100; display: flex; align-items: center; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 30px; }
-#mute-icon { pointer-events: auto; }
-#vol-slider { width: 0; opacity: 0; transition: 0.3s; accent-color: white; pointer-events: auto; }
-#vol-wrapper:hover { gap: 12px; padding: 10px 18px; }
-#vol-wrapper:hover #vol-slider { width: 80px; opacity: 1; }
+    .section-heading h2 {
+      font-size: 18px;
+      font-weight: 500;
+      letter-spacing: -0.025em;
+      margin: 0;
+    }
 
-@media (max-width: 768px) {
-    #vol-wrapper { display: none !important; }
-    #cursor-dot { display: none !important; }
-    * { cursor: auto !important; }
-}
-</style>
+    .home-directory {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 26px 36px;
+    }
+
+    .home-directory h3 {
+      font: 12px Sora, sans-serif;
+      margin: 0 0 8px;
+      color: #aaa;
+    }
+
+    .home-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      min-height: 48px;
+      padding: 8px 0;
+      border: 0;
+      background: none;
+      color: #fff;
+      text-align: left;
+      text-decoration: none;
+      font: inherit;
+      cursor: pointer;
+      transition: color 160ms ease, transform 160ms ease;
+    }
+
+    .home-link:hover {
+      transform: translateX(2px);
+    }
+
+    .home-link-text {
+      display: grid;
+      gap: 3px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .home-link-text > span {
+      font-size: 12px;
+      overflow-wrap: anywhere;
+      width: fit-content;
+      max-width: 100%;
+      text-decoration: none;
+      background-image: linear-gradient(currentColor, currentColor);
+      background-position: left bottom;
+      background-repeat: no-repeat;
+      background-size: 0% 1px;
+      transition: background-size 220ms ease, color 160ms ease;
+      padding-bottom: 4px;
+      margin-bottom: -4px;
+    }
+
+    .home-link:is(:hover, :focus-visible) .home-link-text > span {
+      background-size: 100% 1px;
+    }
+
+    .home-link-text small {
+      font: 10px Sora, sans-serif;
+      line-height: 1.6;
+      color: #777;
+    }
+
+    .icon {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      stroke-width: 1.5;
+    }
+
+    .home-link > .icon:last-child {
+      width: 12px;
+      height: 12px;
+      color: #888;
+    }
+
+    .artist-grid {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      display: grid;
+      gap: 12px 28px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      max-width: 520px;
+    }
+
+    .artist-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 48px;
+      text-decoration: none;
+      transition: color 160ms ease, transform 160ms ease;
+    }
+
+    .artist-name {
+      display: block;
+      font-size: 11px;
+      line-height: 1.65;
+      overflow-wrap: anywhere;
+      width: fit-content;
+      max-width: 100%;
+      background-image: linear-gradient(currentColor, currentColor);
+      background-position: left bottom;
+      background-repeat: no-repeat;
+      background-size: 0% 1px;
+      transition: background-size 220ms ease;
+    }
+
+    .artist-card:is(:hover, :focus-visible) .artist-name {
+      background-size: 100% 1px;
+    }
+
+    .artist-text {
+      min-width: 0;
+    }
+
+    .artist-action {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 6px;
+      font-size: 9px;
+      line-height: 14px;
+      white-space: nowrap;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 200ms ease, transform 200ms ease;
+      color: #888;
+    }
+
+    .artist-action .icon {
+      width: 11px;
+      height: 11px;
+    }
+
+    .artist-card:hover .artist-action,
+    .artist-card:focus-visible .artist-action {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Spotify now playing */
+    .spotify-widget {
+      margin-top: 8px;
+    }
+    .spotify-widget[hidden] {
+      display: none;
+    }
+    .spotify-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 16px;
+      font-size: 10px;
+      color: #aaa;
+    }
+    .spotify-label svg {
+      width: 16px;
+      height: 16px;
+      color: #1db954;
+    }
+    .spotify-track {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      padding: 10px;
+      margin: -10px;
+      border-radius: 12px;
+      transition: transform 200ms ease, background-color 200ms ease, box-shadow 200ms ease;
+    }
+    .spotify-track:is(:hover, :focus-visible) {
+      transform: translateY(-2px);
+      background-color: #ffffff08;
+      box-shadow: 0 0 0 1px #ffffff10;
+    }
+    .spotify-cover-wrap {
+      position: relative;
+      width: 56px;
+      height: 56px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      overflow: hidden;
+      background: #191919;
+      box-shadow: inset 0 0 0 1px #ffffff18;
+    }
+    .spotify-cover-wrap.spinning {
+      animation: record-spin 8s linear infinite;
+    }
+    @keyframes record-spin {
+      to { transform: rotate(360deg); }
+    }
+    .spotify-cover {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .spotify-details {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+    }
+    .spotify-title {
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.4;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .spotify-artist {
+      font-size: 11px;
+      color: #aaa;
+      line-height: 1.4;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .spotify-progress {
+      margin-top: 6px;
+      height: 3px;
+      background: #333;
+      border-radius: 2px;
+      overflow: hidden;
+      max-width: 180px;
+    }
+    .spotify-progress-bar {
+      height: 100%;
+      background: #1db954;
+      border-radius: 2px;
+      width: 0%;
+      transition: width 1s linear;
+    }
+
+    /* Lyrics panel */
+    .lyrics-panel {
+      margin-top: 22px;
+      padding-left: 14px;
+      border-left: 1px solid #252525;
+      min-height: 3.2em;
+    }
+    .lyrics-panel[hidden] {
+      display: none;
+    }
+    .lyric-line {
+      margin: 0;
+      min-height: 3.2em;
+      color: #e8e8e8;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.65;
+      letter-spacing: -0.025em;
+      text-wrap: pretty;
+      overflow-wrap: anywhere;
+    }
+    .lyric-text {
+      background: linear-gradient(to right, #fff 50%, #747474 50%);
+      background-size: 200% 100%;
+      background-position: 100% 0;
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    .lyric-gap {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      height: 1.65em;
+      color: #666;
+    }
+    .lyric-gap[hidden],
+    .lyric-text[hidden] {
+      display: none;
+    }
+    .lyric-gap span {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: lyric-bounce 1.2s ease-in-out infinite;
+    }
+    .lyric-gap span:nth-child(2) { animation-delay: 150ms; }
+    .lyric-gap span:nth-child(3) { animation-delay: 300ms; }
+    @keyframes lyric-bounce {
+      0%, 40%, 100% { transform: translateY(0); opacity: 0.35; }
+      20% { transform: translateY(-4px); opacity: 1; }
+    }
+    .lyrics-source {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 8px;
+      color: #454545;
+      text-decoration: none;
+      transition: color 180ms ease;
+    }
+    .lyrics-source:is(:hover, :focus-visible) {
+      color: #999;
+    }
+
+    .site-credit {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 5px;
+      padding: 20px 16px 24px;
+      color: #777;
+      font-size: 10px;
+      line-height: 1.6;
+    }
+
+    .site-credit a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .site-credit a:hover { color: #fff; }
+
+    .credit-heart {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+      stroke: none;
+    }
+
+    /* Profile viewer */
+    .profile-viewer {
+      overflow: auto;
+      width: max-content;
+      max-width: calc(100vw - 32px);
+      max-height: calc(100svh - 32px);
+      margin: auto;
+      padding: 16px;
+      border: 1px solid #ffffff15;
+      border-radius: 16px;
+      background: #080808;
+      color: #fff;
+      box-shadow: 0 24px 100px #0009;
+    }
+
+    .profile-viewer[open] {
+      display: grid;
+      gap: 12px;
+      animation: viewer-enter 220ms ease-out both;
+    }
+
+    .profile-viewer::backdrop {
+      background: #000b;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .viewer-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .viewer-toolbar h2 {
+      margin: 0;
+      font: 12px Sora, sans-serif;
+    }
+
+    .viewer-close {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: #ffffff0a;
+      color: #fff;
+      cursor: pointer;
+      transition: background 160ms ease, transform 160ms ease;
+    }
+
+    .viewer-close:hover {
+      background: #ffffff18;
+      transform: rotate(90deg);
+    }
+
+    .viewer-image {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: min(72vw, 680px);
+      max-height: calc(100svh - 140px);
+      margin: auto;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    @keyframes viewer-enter {
+      from { opacity: 0; transform: translateY(8px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @media (max-width: 900px) {
+      .home { gap: 40px; grid-template-columns: 180px minmax(0, 1fr); }
+    }
+
+    @media (max-width: 760px) {
+      main { padding: 40px 24px; }
+      .home {
+        max-width: 460px;
+        grid-template-columns: 1fr;
+        gap: 44px;
+      }
+      .home-intro {
+        position: static;
+        display: grid;
+        grid-template-columns: 80px 1fr;
+        gap: 0 20px;
+        align-items: center;
+      }
+      .image-frame--home { width: 80px; height: 80px; }
+      .home-intro h1 { margin: 0; font-size: 36px; }
+      .home-name { margin-top: 0; }
+      .home-content { gap: 40px; }
+      .home-directory { gap: 22px 20px; }
+      .artist-grid { gap: 12px 16px; }
+    }
+
+    @media (max-width: 420px) {
+      .home-directory { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 360px) {
+      .artist-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (hover: none) {
+      .artist-action { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
-
 <body>
-
-<div id="cursor-dot"></div>
-
-<div id="entry" onclick="start()">
-    <div style="letter-spacing:4px;opacity:.4;">CLICK TO ENTER</div>
-</div>
-
-<video id="bg-video" loop muted playsinline>
-    <source src="https://files.catbox.moe/6gtpma.mp4">
-</video>
-
-<audio id="bg-audio" loop>
-    <source src="https://files.catbox.moe/o5xf95.mp3">
-</audio>
-
-<div id="vol-wrapper">
-    <i class="fa-solid fa-volume-high" id="mute-icon"></i>
-    <input type="range" id="vol-slider" min="0" max="1" step="0.01" value="0.5">
-</div>
-
-<section class="page-section">
-    <div class="scroll-wrapper">
-        <div class="tilt-card">
-            <img src="https://files.catbox.moe/9blqvh.png" class="ivy ivy-top-l">
-            <img src="https://files.catbox.moe/9blqvh.png" class="ivy ivy-top-r">
-            <img src="https://files.catbox.moe/9blqvh.png" class="ivy ivy-side-l">
-            <img src="https://files.catbox.moe/9blqvh.png" class="ivy ivy-side-r">
-
-            <h1>Tubiu</h1>
-
-            <div class="typing-container">
-                <span id="typed-text"></span><span class="cursor-bar">|</span>
-            </div>
-
-            <div class="location">
-                <i class="fa-solid fa-location-dot"></i> Türkiye
-            </div>
-
-            <a href="https://discord.com/users/941422456802005063" target="_blank">
-                <img src="https://lanyard.cnrad.dev/api/941422456802005063?theme=dark&bg=transparent" alt="Discord Status" class="lanyard-card">
-            </a>
-
-            <div class="socials">
-                <a href="https://open.spotify.com/user/ypzl18cpzin19zec9bfb31575" target="_blank"><i class="fa-brands fa-spotify"></i></a>
-                <a href="https://anilist.co/user/Tubiu/" target="_blank">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M6.361 2.362L.195 21.493h4.636l1.353-4.402h8.795l1.354 4.402h4.869L14.75 2.362zM9.54 7.553h.034l3.123 9.77H6.38zM23.805 21.493V14.19h-3.488v7.303z"/>
-                    </svg>
-                </a>
-                <a href="https://www.roblox.com/users/10650135323/profile" target="_blank">
-                    <svg viewBox="0 0 100 100"><path d="M22.5,0L0,77.5L77.5,100L100,22.5L22.5,0z M60,60L40,55L45,35L65,40L60,60z"></path></svg>
-                </a>
-                <a href="https://www.tiktok.com/@tubiu_" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
-                <a href="https://steamcommunity.com/id/Tubiu/" target="_blank"><i class="fa-brands fa-steam"></i></a>
-            </div>
+  <main>
+    <div class="home">
+      <section class="home-intro" aria-labelledby="intro-title">
+        <a class="image-frame image-frame--home profile-trigger" href="images/pfp.jpg" data-profile-trigger aria-haspopup="dialog" aria-controls="profile-viewer" aria-label="View Aras's profile picture">
+          <img class="home-portrait" src="images/pfp.jpg" width="160" height="160" alt="Aras's profile picture">
+        </a>
+        <div class="home-name">
+          <h1 id="intro-title">Aras</h1>
+          <span class="status" id="discord-status">
+            <span class="status-dot" id="status-dot"></span>
+            <span id="status-text">Online</span>
+          </span>
         </div>
-    </div>
-    
-    <div class="scroll-indicator">
-        About Me
-        <i class="fa-solid fa-chevron-down"></i>
-    </div>
-</section>
 
-<section class="page-section">
-    <div class="scroll-wrapper">
-        <div class="tilt-card" style="padding: 50px 20px;">
-            <div class="about-title"><i class="fa-solid fa-user" style="font-size: 16px; margin-right: 8px; color: var(--ivy-green);"></i> About Me</div>
-            <p class="about-text">
-                Hi, I’m Aras. I spend most of my time listening to Wisp or Ichiko Aoba. When I'm playing, I’m usually playing Deepwoken I mostly run support, but I do a bit of PvP on the side. I also play CS:GO, Lethal Company, and Repo now and then, so feel free to add me on Steam or Discord if you want to play. In my free time, I usually read manga or just get outside. Nice to meet you!            </p>
-            <p class="about-text" style="font-size: 13px; color: #999; font-style: italic;">
-                "Larp till you make it <3"
+        <!-- Currently listening (via Discord / Lanyard) -->
+        <section class="spotify-widget" id="spotify-widget" hidden aria-label="Currently listening">
+          <p class="spotify-label">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+            Listening on Spotify
+          </p>
+          <a class="spotify-track" id="spotify-track" href="#" target="_blank" rel="noopener noreferrer">
+            <div class="spotify-cover-wrap" id="spotify-cover-wrap">
+              <img class="spotify-cover" id="spotify-cover" src="" alt="" width="56" height="56">
+            </div>
+            <div class="spotify-details">
+              <div class="spotify-title" id="spotify-title">—</div>
+              <div class="spotify-artist" id="spotify-artist">—</div>
+              <div class="spotify-progress">
+                <div class="spotify-progress-bar" id="spotify-progress-bar"></div>
+              </div>
+            </div>
+          </a>
+
+          <div class="lyrics-panel" id="lyrics-panel" hidden>
+            <p class="lyric-line">
+              <span class="lyric-text" id="lyric-text"></span>
+              <span class="lyric-gap" id="lyric-gap" hidden>
+                <span></span><span></span><span></span>
+              </span>
             </p>
-        </div>
+            <a class="lyrics-source" href="https://lrclib.net" target="_blank" rel="noopener noreferrer">lyrics via lrclib</a>
+          </div>
+        </section>
+      </section>
+
+      <div class="home-content">
+        <section aria-labelledby="links-title">
+          <div class="section-heading">
+            <h2 id="links-title">Links</h2>
+          </div>
+
+          <div class="home-directory">
+            <section>
+              <h3>Social</h3>
+              <a class="home-link" href="https://discord.com/users/941422456802005063" target="_blank" rel="noopener noreferrer">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                <span class="home-link-text">
+                  <span>Discord</span>
+                  <small>@tubiu</small>
+                </span>
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+              </a>
+              <a class="home-link" href="https://www.tiktok.com/@tubiu_" target="_blank" rel="noopener noreferrer">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+                <span class="home-link-text">
+                  <span>TikTok</span>
+                  <small>@tubiu_</small>
+                </span>
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+              </a>
+            </section>
+
+            <section>
+              <h3>Music & Anime</h3>
+              <a class="home-link" href="https://open.spotify.com/user/ypzl18cpzin19zec9bfb31575" target="_blank" rel="noopener noreferrer">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14.5c1.5 1 4.5 1.5 6.5.5"/><path d="M8 11.5c2 1 5.5 1.5 8 .5"/><path d="M8 8.5c2.5 1 6.5 1.5 9 .5"/></svg>
+                <span class="home-link-text">
+                  <span>Spotify</span>
+                  <small>profile</small>
+                </span>
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+              </a>
+              <a class="home-link" href="https://anilist.co/user/Tubiu/" target="_blank" rel="noopener noreferrer">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                <span class="home-link-text">
+                  <span>AniList</span>
+                  <small>Tubiu</small>
+                </span>
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+              </a>
+            </section>
+
+            <section>
+              <h3>Games</h3>
+              <a class="home-link" href="https://steamcommunity.com/id/Tubiu/" target="_blank" rel="noopener noreferrer">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+                <span class="home-link-text">
+                  <span>Steam</span>
+                  <small>Tubiu</small>
+                </span>
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+              </a>
+              <a class="home-link" href="https://www.roblox.com/users/10650135323/profile" target="_blank" rel="noopener noreferrer">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg>
+                <span class="home-link-text">
+                  <span>Roblox</span>
+                  <small>profile</small>
+                </span>
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+              </a>
+            </section>
+          </div>
+        </section>
+
+        <section aria-labelledby="artists-title">
+          <div class="section-heading">
+            <h2 id="artists-title">Favourite artists</h2>
+          </div>
+          <ul class="artist-grid">
+            <li>
+              <a class="artist-card" href="https://open.spotify.com/artist/7HcbQJiChdkCTU40v2tsvc" target="_blank" rel="noopener noreferrer" aria-label="Trophy Wife on Spotify">
+                <span class="artist-text">
+                  <span class="artist-name">Trophy Wife</span>
+                  <span class="artist-action">Open Spotify
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                  </span>
+                </span>
+              </a>
+            </li>
+            <li>
+              <a class="artist-card" href="https://open.spotify.com/artist/4q7OM8u3X98MUGAH6IePgF" target="_blank" rel="noopener noreferrer" aria-label="The Neverminds on Spotify">
+                <span class="artist-text">
+                  <span class="artist-name">The Neverminds</span>
+                  <span class="artist-action">Open Spotify
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                  </span>
+                </span>
+              </a>
+            </li>
+            <li>
+              <a class="artist-card" href="https://open.spotify.com/artist/6l3HvQ5sa6mXTsMTB19rO5" target="_blank" rel="noopener noreferrer" aria-label="J. Cole on Spotify">
+                <span class="artist-text">
+                  <span class="artist-name">J. Cole</span>
+                  <span class="artist-action">Open Spotify
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                  </span>
+                </span>
+              </a>
+            </li>
+            <li>
+              <a class="artist-card" href="https://open.spotify.com/artist/3xSs5iXfAy7FPN8cUqBEfm" target="_blank" rel="noopener noreferrer" aria-label="宇宙ネコ子 on Spotify">
+                <span class="artist-text">
+                  <span class="artist-name">宇宙ネコ子</span>
+                  <span class="artist-action">Open Spotify
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                  </span>
+                </span>
+              </a>
+            </li>
+            <li>
+              <a class="artist-card" href="https://open.spotify.com/artist/3TJZG17pjOKXwx1ELKJPfm" target="_blank" rel="noopener noreferrer" aria-label="Wisp on Spotify">
+                <span class="artist-text">
+                  <span class="artist-name">Wisp</span>
+                  <span class="artist-action">Open Spotify
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                  </span>
+                </span>
+              </a>
+            </li>
+            <li>
+              <a class="artist-card" href="https://open.spotify.com/artist/2h93pZq0e7k5yf4dywlkpM" target="_blank" rel="noopener noreferrer" aria-label="Frank Ocean on Spotify">
+                <span class="artist-text">
+                  <span class="artist-name">Frank Ocean</span>
+                  <span class="artist-action">Open Spotify
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                  </span>
+                </span>
+              </a>
+            </li>
+            <li>
+              <a class="artist-card" href="https://open.spotify.com/artist/00epidt1rfpJJKIfi7dSQJ" target="_blank" rel="noopener noreferrer" aria-label="Seventeen Years Old and Berlin Wall on Spotify">
+                <span class="artist-text">
+                  <span class="artist-name">Seventeen Years Old and Berlin Wall</span>
+                  <span class="artist-action">Open Spotify
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                  </span>
+                </span>
+              </a>
+            </li>
+            <li>
+              <a class="artist-card" href="https://open.spotify.com/artist/1JP8TbSISsEiRBI1duEbw7" target="_blank" rel="noopener noreferrer" aria-label="Uchu Nekoko on Spotify">
+                <span class="artist-text">
+                  <span class="artist-name">Uchu Nekoko</span>
+                  <span class="artist-action">Open Spotify
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                  </span>
+                </span>
+              </a>
+            </li>
+            <li>
+              <a class="artist-card" href="https://open.spotify.com/artist/7FLc0ZM9hJw9ZxLm0kH9vQ" target="_blank" rel="noopener noreferrer" aria-label="Misfits on Spotify">
+                <span class="artist-text">
+                  <span class="artist-name">Misfits</span>
+                  <span class="artist-action">Open Spotify
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                  </span>
+                </span>
+              </a>
+            </li>
+          </ul>
+        </section>
+      </div>
     </div>
+  </main>
 
-    <div class="scroll-indicator">
-        Event Timestamps
-        <i class="fa-solid fa-chevron-down"></i>
+  <footer class="site-credit">
+    <span>Built with</span>
+    <svg class="credit-heart" viewBox="0 0 24 24" fill="currentColor"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/></svg>
+    <span>for Aras</span>
+  </footer>
+
+  <dialog class="profile-viewer" id="profile-viewer" aria-labelledby="profile-viewer-title">
+    <div class="viewer-toolbar">
+      <h2 id="profile-viewer-title">Aras's profile picture</h2>
+      <button class="viewer-close" type="button" data-viewer-close aria-label="Close photo">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 6-12 12M6 6l12 12"/></svg>
+      </button>
     </div>
-</section>
+    <img class="viewer-image" src="images/pfp.jpg" alt="Aras's profile picture">
+  </dialog>
 
-<section class="page-section">
-    <div class="scroll-wrapper">
-        <div class="tilt-card tracker-card">
-            <h1>Event cycles</h1>
-            
-            <div class="tracker-grid">
-                <div class="event-row">
-                    <div class="event-name">Doom of Caeranthil</div>
-                    <div class="event-timer" id="timer-caeranthil">Loading...</div>
-                </div>
-                <div class="event-row">
-                    <div class="event-name">Cinders of Etris</div>
-                    <div class="event-timer" id="timer-etris">Loading...</div>
-                </div>
-                <div class="event-row">
-                    <div class="event-name">Carnival of Hearts</div>
-                    <div class="event-timer" id="timer-carnival">Loading...</div>
-                </div>
-                <div class="event-row">
-                    <div class="event-name">Interluminary Parasol</div>
-                    <div class="event-timer" id="timer-parasol">Loading...</div>
-                </div>
-                <div class="event-row">
-                    <div class="event-name">Battle Royale</div>
-                    <div class="event-timer" id="timer-royale">Loading...</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+  <script>
+    // Profile picture viewer
+    const trigger = document.querySelector('[data-profile-trigger]');
+    const viewer = document.getElementById('profile-viewer');
+    const closeBtn = document.querySelector('[data-viewer-close]');
 
-
-<script>
-/* Dynamic scroll */
-const scrollWrappers = document.querySelectorAll('.scroll-wrapper');
-
-function updateScroll() {
-    const wh = window.innerHeight;
-    scrollWrappers.forEach(wrapper => {
-        const rect = wrapper.getBoundingClientRect();
-        const center = rect.top + (rect.height / 2);
-        
-        const dist = Math.abs(center - (wh / 2));
-        const maxDist = wh * 0.7; 
-        
-        let progress = dist / maxDist;
-        progress = Math.max(0, Math.min(1, progress)); 
-        
-        const opacity = 1 - Math.pow(progress, 2); 
-        const scale = 1 - (progress * 0.3); 
-
-        wrapper.style.opacity = opacity;
-        wrapper.style.transform = `scale(${scale})`;
+    trigger?.addEventListener('click', (e) => {
+      e.preventDefault();
+      viewer.showModal();
     });
-}
-window.addEventListener('scroll', updateScroll);
-updateScroll(); 
-
-
-/* 3d lerp engine */
-const cards = document.querySelectorAll('.tilt-card');
-
-cards.forEach(card => {
-    let bounds;
-    let targetX = 0; let targetY = 0;
-    let currentX = 0; let currentY = 0;
-    let isHovering = false;
-
-    card.addEventListener('mouseenter', () => {
-        bounds = card.getBoundingClientRect();
-        isHovering = true;
+    closeBtn?.addEventListener('click', () => viewer.close());
+    viewer?.addEventListener('click', (e) => {
+      if (e.target === viewer) viewer.close();
     });
 
-    card.addEventListener('mousemove', (e) => {
-        if (!isHovering) return;
-        const x = e.clientX - bounds.left;
-        const y = e.clientY - bounds.top;
-        const centerX = bounds.width / 2;
-        const centerY = bounds.height / 2;
-        
-        targetX = ((centerY - y) / centerY) * 4;
-        targetY = ((x - centerX) / centerX) * 4;
-    });
+    // Lanyard – live Discord presence + Spotify + Lyrics
+    const DISCORD_ID = '941422456802005063';
+    const statusEl = document.getElementById('discord-status');
+    const statusDot = document.getElementById('status-dot');
+    const statusText = document.getElementById('status-text');
+    const widget = document.getElementById('spotify-widget');
+    const trackLink = document.getElementById('spotify-track');
+    const cover = document.getElementById('spotify-cover');
+    const coverWrap = document.getElementById('spotify-cover-wrap');
+    const titleEl = document.getElementById('spotify-title');
+    const artistEl = document.getElementById('spotify-artist');
+    const progressBar = document.getElementById('spotify-progress-bar');
+    const lyricsPanel = document.getElementById('lyrics-panel');
+    const lyricText = document.getElementById('lyric-text');
+    const lyricGap = document.getElementById('lyric-gap');
 
-    card.addEventListener('mouseleave', () => {
-        isHovering = false;
-        targetX = 0; 
-        targetY = 0;
-    });
+    const statusColors = {
+      online: '#43b581',
+      idle: '#faa61a',
+      dnd: '#f04747',
+      offline: '#747f8d'
+    };
 
-    function render3D() {
-        currentX += (targetX - currentX) * 0.1;
-        currentY += (targetY - currentY) * 0.1;
-        
-        card.style.transform = `perspective(1000px) rotateX(${currentX}deg) rotateY(${currentY}deg) scale3d(${isHovering ? 1.02 : 1}, ${isHovering ? 1.02 : 1}, ${isHovering ? 1.02 : 1})`;
-        requestAnimationFrame(render3D);
+    let progressInterval = null;
+    let lyricsInterval = null;
+    let currentTrackId = null;
+    let lyricsLines = [];   // [{time: ms, text: string}]
+    let trackStart = 0;
+    let trackEnd = 0;
+    const lyricsCache = new Map();
+
+    function parseLRC(lrc) {
+      if (!lrc) return [];
+      const lines = [];
+      const re = /\[(\d{2}):(\d{2})(?:\.(\d{2,3}))?\](.*)/g;
+      let m;
+      while ((m = re.exec(lrc)) !== null) {
+        const min = parseInt(m[1], 10);
+        const sec = parseInt(m[2], 10);
+        const ms = m[3] ? parseInt(m[3].padEnd(3, '0').slice(0, 3), 10) : 0;
+        const time = min * 60000 + sec * 1000 + ms;
+        const text = m[4].trim();
+        lines.push({ time, text });
+      }
+      return lines.sort((a, b) => a.time - b.time);
     }
-    render3D();
-});
 
+    async function fetchLyrics(artist, song, durationSec) {
+      const key = `${artist}::${song}`.toLowerCase();
+      if (lyricsCache.has(key)) return lyricsCache.get(key);
 
-/* event tracer faw */
-const anchors = {
-    "caeranthil": { anchor: 1777953600, interval: 7200 },
-    "etris": { anchor: 1777957200, interval: 7200 },     
-    "carnival": { anchor: 1777957200, interval: 5400 },   
-    "parasol": { anchor: 1777959000, interval: 5400 },    
-    "royale": { anchor: 1777960800, interval: 5400 }     
-};
+      try {
+        const params = new URLSearchParams({
+          artist_name: artist,
+          track_name: song,
+        });
+        if (durationSec) params.set('duration', Math.round(durationSec));
 
-function formatTime(seconds) {
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    const s = seconds % 60;
-    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-}
-
-function updateTimers() {
-    const now = Math.floor(Date.now() / 1000);
-    for (const [eventName, data] of Object.entries(anchors)) {
-        const elapsed = now - data.anchor;
-        let nextEvent = elapsed < 0 ? data.anchor : now + (data.interval - (elapsed % data.interval));
-        
-        const element = document.getElementById(`timer-${eventName}`);
-        const timeRemaining = nextEvent - now;
-        
-        element.innerText = formatTime(timeRemaining);
-        element.style.color = timeRemaining < 300 ? "#f43f5e" : "#4ade80"; // Updates to Green matching Ivy theme
-    }
-}
-updateTimers();
-setInterval(updateTimers, 1000);
-
-
-/* SMOOTH CURSOR */
-const dot = document.getElementById("cursor-dot");
-let mouseX = 0, mouseY = 0;
-let curX = 0, curY = 0;
-
-document.addEventListener("mousemove", (e) => {
-    mouseX = e.clientX; mouseY = e.clientY;
-});
-function renderCursor() {
-    curX += (mouseX - curX) * 0.35;
-    curY += (mouseY - curY) * 0.35;
-    dot.style.transform = `translate3d(${curX - 3}px, ${curY - 3}px, 0)`;
-    requestAnimationFrame(renderCursor);
-}
-renderCursor();
-
-
-/* type writer */
-const phrases = ["I love you.", "just breathe.", "stay a while.", "drifting away.", "Innocent Sin"];
-let p = 0, i = 0, del = false;
-
-function type() {
-    const el = document.getElementById("typed-text");
-    const word = phrases[p];
-    el.textContent = word.substring(0, i);
-
-    if (!del) {
-        i++;
-        if (i > word.length) {
-            del = true;
-            return setTimeout(type, 1500);
+        const res = await fetch(`https://lrclib.net/api/get?${params}`, {
+          headers: { 'User-Agent': 'ArasPersonalSite/1.0' }
+        });
+        if (!res.ok) {
+          lyricsCache.set(key, []);
+          return [];
         }
-    } else {
-        i--;
-        if (i === 0) {
-            del = false;
-            p = (p + 1) % phrases.length;
+        const data = await res.json();
+        const lines = parseLRC(data.syncedLyrics || '');
+        lyricsCache.set(key, lines);
+        return lines;
+      } catch {
+        lyricsCache.set(key, []);
+        return [];
+      }
+    }
+
+    function updateLyrics() {
+      if (!lyricsLines.length || !trackStart) {
+        lyricsPanel.hidden = true;
+        return;
+      }
+      const now = Date.now();
+      const pos = now - trackStart;
+
+      if (pos < 0 || pos > (trackEnd - trackStart) + 2000) {
+        lyricsPanel.hidden = true;
+        return;
+      }
+
+      // binary search for current line
+      let lo = 0, hi = lyricsLines.length;
+      while (lo < hi) {
+        const mid = (lo + hi) >>> 1;
+        if (lyricsLines[mid].time <= pos) lo = mid + 1;
+        else hi = mid;
+      }
+      const idx = lo - 1;
+      const current = idx >= 0 ? lyricsLines[idx] : null;
+      const nextTime = lyricsLines[lo]?.time ?? (trackEnd - trackStart);
+
+      lyricsPanel.hidden = false;
+
+      if (current && current.text) {
+        lyricText.hidden = false;
+        lyricGap.hidden = true;
+        lyricText.textContent = current.text;
+
+        // sweep highlight (how far through this line)
+        const lineStart = current.time;
+        const lineDur = Math.max(1, nextTime - lineStart);
+        const linePos = Math.min(1, Math.max(0, (pos - lineStart) / lineDur));
+        const bgPos = 100 - (linePos * 100);
+        lyricText.style.backgroundPosition = `${bgPos}% 0`;
+      } else {
+        // instrumental gap
+        lyricText.hidden = true;
+        lyricGap.hidden = false;
+        lyricText.textContent = '';
+      }
+    }
+
+    function startLyricsLoop() {
+      if (lyricsInterval) clearInterval(lyricsInterval);
+      updateLyrics();
+      lyricsInterval = setInterval(updateLyrics, 80);
+    }
+
+    function stopLyrics() {
+      if (lyricsInterval) clearInterval(lyricsInterval);
+      lyricsInterval = null;
+      lyricsLines = [];
+      lyricsPanel.hidden = true;
+      lyricText.textContent = '';
+    }
+
+    function updateProgress(spotify) {
+      if (progressInterval) clearInterval(progressInterval);
+      if (!spotify) return;
+
+      const start = spotify.timestamps.start;
+      const end = spotify.timestamps.end;
+      const duration = end - start;
+
+      function tick() {
+        const now = Date.now();
+        const elapsed = Math.min(now - start, duration);
+        const pct = (elapsed / duration) * 100;
+        progressBar.style.width = pct + '%';
+        if (pct >= 100) clearInterval(progressInterval);
+      }
+      tick();
+      progressInterval = setInterval(tick, 1000);
+    }
+
+    async function fetchPresence() {
+      try {
+        const res = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`);
+        const json = await res.json();
+        if (!json.success) return;
+
+        const data = json.data;
+        const status = data.discord_status || 'offline';
+
+        // Status indicator
+        statusDot.style.background = statusColors[status] || statusColors.offline;
+        statusEl.style.color = statusColors[status] || statusColors.offline;
+        statusText.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+
+        // Spotify
+        if (data.listening_to_spotify && data.spotify) {
+          const s = data.spotify;
+          widget.hidden = false;
+
+          trackStart = s.timestamps.start;
+          trackEnd = s.timestamps.end;
+
+          if (s.track_id !== currentTrackId) {
+            currentTrackId = s.track_id;
+            titleEl.textContent = s.song;
+            artistEl.textContent = s.artist;
+            cover.src = s.album_art_url;
+            cover.alt = s.album;
+            trackLink.href = `https://open.spotify.com/track/${s.track_id}`;
+            coverWrap.classList.add('spinning');
+
+            // load lyrics for new track
+            stopLyrics();
+            const durationSec = (s.timestamps.end - s.timestamps.start) / 1000;
+            const lines = await fetchLyrics(s.artist, s.song, durationSec);
+            if (s.track_id === currentTrackId) { // still same track
+              lyricsLines = lines;
+              if (lines.length) startLyricsLoop();
+            }
+          } else {
+            // same track – keep lyrics running
+            if (lyricsLines.length && !lyricsInterval) startLyricsLoop();
+          }
+          updateProgress(s);
+        } else {
+          widget.hidden = true;
+          currentTrackId = null;
+          coverWrap.classList.remove('spinning');
+          if (progressInterval) clearInterval(progressInterval);
+          stopLyrics();
         }
+      } catch (err) {
+        console.warn('Lanyard fetch failed', err);
+      }
     }
-    setTimeout(type, del ? 45 : 90);
-}
-type();
 
-
-/* cnotrol audio */
-const bgAudio = document.getElementById("bg-audio");
-const muteIcon = document.getElementById("mute-icon");
-const volSlider = document.getElementById("vol-slider");
-
-function start() {
-    document.getElementById("entry").classList.add("hide");
-    document.getElementById("bg-video").play();
-    bgAudio.volume = volSlider.value;
-    bgAudio.play();
-}
-
-muteIcon.onclick = () => {
-    bgAudio.muted = !bgAudio.muted;
-    if (bgAudio.muted) {
-        muteIcon.classList.replace("fa-volume-high", "fa-volume-xmark");
-    } else {
-        muteIcon.classList.replace("fa-volume-xmark", "fa-volume-high");
-        if (volSlider.value == 0) { volSlider.value = 0.5; bgAudio.volume = 0.5; }
-    }
-};
-
-volSlider.oninput = (e) => {
-    const val = parseFloat(e.target.value);
-    bgAudio.volume = val;
-    if (val > 0 && bgAudio.muted) { bgAudio.muted = false; muteIcon.classList.replace("fa-volume-xmark", "fa-volume-high"); }
-    else if (val === 0 && !bgAudio.muted) { bgAudio.muted = true; muteIcon.classList.replace("fa-volume-high", "fa-volume-xmark"); }
-};
-</script>
-
+    fetchPresence();
+    setInterval(fetchPresence, 15000);
+  </script>
 </body>
 </html>
